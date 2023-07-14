@@ -3,6 +3,7 @@ import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { initializeApp } from "firebase/app";
 import { getStorage } from "firebase/storage";
 import axios from "axios";
+import "./App.css";
 
 // Initialize Firebase
 const app = initializeApp({
@@ -60,6 +61,8 @@ export default function App() {
         });
       }
     );
+
+    click2();
   }
 
   const handleExport = () => {
@@ -76,31 +79,53 @@ export default function App() {
   //-------------------------------------------------------------------------------------------------------
   const [response, setResponse] = useState({});
 
-  axios
-    .get("http://localhost:8080/list-report")
-    .then(res => {
-      return setResponse(res.data);
-    })
-    .catch(err => {
-      throw err;
-    });
+  const click2 = () => {
+    axios
+      .get("http://localhost:8080/list-report")
+      .then(res => {
+        return setResponse(res.data);
+      })
+      .catch(err => {
+        throw err;
+      });
+  }
 
   const click1 = () => {
-    if(first) {
+    if (first) {
       response.forEach(item => {
-        document.getElementById("123").innerHTML += "<option key=" + item.id + " value=" + item.id + ">" + item.description + "</option>";
+        document.getElementById("inputReport").innerHTML += "<option key=" + item.id + " value=" + item.id + ">" + item.description + "</option>";
       });
       setFirst(false);
     }
   };
 
   return (
-    <div>
-      <input type="file" onChange={handleFileChange} />
-      <select defaultValue="default" onClick={click1} onChange={handleInputChange} id="123">
-        <option value="default" disabled hidden>Chọn kiểu Report</option>
-      </select>
-      <button onClick={handleExport}>Xuất report</button>
+    <div className="container">
+      <div className="row">
+        <div className="col col-4">
+          <form>
+            <div className="form-group">
+              <label for="inputFile">Chọn File</label>
+              <input className="form-control" id="inputFile" type="file" onChange={handleFileChange} />
+            </div>
+            <div className="form-group">
+              <label for="inputReport">Chọn mẫu Report</label>
+              <select className="form-control" defaultValue="default" onClick={click1} onChange={handleInputChange} id="inputReport">
+                <option value="default" disabled hidden>Chọn kiểu Report</option>
+              </select>
+            </div>
+            <div className="form-group">
+              <button className="btn btn-primary" onClick={handleExport} style={{float: "right"}}>Xuất report</button>
+            </div>
+          </form>
+        </div>
+        <div className="col" style={{marginLeft: "20px"}}></div>
+      </div>
+      <div className="row">
+        <div className="col">
+          abc
+        </div>
+      </div>
     </div>
   );
 }
